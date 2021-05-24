@@ -1,6 +1,6 @@
 import { MultipartUploadResult } from 'ali-oss';
 import uuidv4 from 'uuid/v4';
-import { Room, PPT, PPTKind, ApplianceNames } from 'white-web-sdk';
+import { Room, PPT, PPTKind, ApplianceNames, createPPTTask } from 'white-web-sdk';
 import MD5 from 'js-md5';
 import { resolveFileInfo } from './helper';
 
@@ -60,6 +60,9 @@ export class UploadManager {
     folder: string,
     uuid: string,
     onProgress?: PPTProgressListener,
+    region?: string,
+    taskUuid?: string,
+    taskToken?: string
   ): Promise<void> {
     const {fileType} = resolveFileInfo(rawFile);
     const path = `/${folder}/${uuid}${fileType}`;
@@ -67,10 +70,10 @@ export class UploadManager {
     let res: PPT;
     if (kind === PPTKind.Static) {
       const resp = createPPTTask({
-        uuid: uploadResult.taskUuid,
-        kind: payload.kind,
-        taskToken: uploadResult.taskToken,
-        region: this.region,
+        uuid: `${taskUuid}`,
+        kind: kind,
+        taskToken: `${taskToken}`,
+        region: `${region}` as any,
         callbacks: {
           onProgressUpdated: progress => {
             console.log(' onProgressUpdated ', progress)
@@ -111,11 +114,11 @@ export class UploadManager {
           active: true,
           id: `${uuidv4()}`,
           pptType: PPTType.static,
-          data: res.scenes,
+          data: ppt.scenes,
         };
         const scenePath = MD5(`/${uuid}/${documentFile.id}`);
-        this.room.putScenes(`/${scenePath}`, res.scenes);
-        this.room.setScenePath(`/${scenePath}/${res.scenes[0].name}`);
+        this.room.putScenes(`/${scenePath}`, ppt.scenes);
+        this.room.setScenePath(`/${scenePath}/${ppt.scenes[0].name}`);
     } else {
         res = await pptConverter.convert({
           url: pptURL,
