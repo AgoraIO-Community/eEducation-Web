@@ -83,11 +83,6 @@ declare module 'js-md5' {
   export default MD5;
 }
 
-declare module 'ua-parser-js' {
-  const UAParserJs: any;
-  export default UAParserJs;
-}
-
 declare interface Device {
   deviceId: string
   label: string

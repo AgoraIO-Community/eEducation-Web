@@ -5,7 +5,7 @@ import md5 from "js-md5";
 import { t } from "@/i18n";
 import { get } from "lodash";
 import { APP_ID } from "@/utils/config";
-import UAParser from 'ua-parser-js';
+import {UAParser} from 'ua-parser-js';
 
 const UA = new UAParser();
 const parser = UA.getResult()

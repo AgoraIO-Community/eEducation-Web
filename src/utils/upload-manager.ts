@@ -66,15 +66,47 @@ export class UploadManager {
     const pptURL = await this.addFile(path, rawFile, onProgress);
     let res: PPT;
     if (kind === PPTKind.Static) {
-        res = await pptConverter.convert({
-          url: pptURL,
-          kind: kind,
-          onProgressUpdated: (progress: number) => {
-            if (onProgress) {
-              onProgress(PPTProgressPhase.Converting, progress);
-            }
-          },
-        });
+      const resp = createPPTTask({
+        uuid: uploadResult.taskUuid,
+        kind: payload.kind,
+        taskToken: uploadResult.taskToken,
+        region: this.region,
+        callbacks: {
+          onProgressUpdated: progress => {
+            console.log(' onProgressUpdated ', progress)
+              if (onProgress) {
+                onProgress(PPTProgressPhase.Converting, progress);
+              }
+            },
+            onTaskFail: () => {
+              console.log(' onTaskFail ')
+              // payload.onProgress({
+              //   phase: 'finish',
+              //   progress: 1,
+              //   isTransFile: true,
+              // })
+            },
+            onTaskSuccess: () => {
+              console.log(' onTaskSuccess ')
+              // payload.onProgress({
+              //   phase: 'finish',
+              //   progress: 1,
+              //   isTransFile: true,
+              // })
+            },
+        }
+      })
+
+      const ppt = await resp.checkUtilGet();
+        // res = await pptConverter.convert({
+        //   url: pptURL,
+        //   kind: kind,
+        //   onProgressUpdated: (progress: number) => {
+        //     if (onProgress) {
+        //       onProgress(PPTProgressPhase.Converting, progress);
+        //     }
+        //   },
+        // });
         const documentFile: PPTDataType = {
           active: true,
           id: `${uuidv4()}`,

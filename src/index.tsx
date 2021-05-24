@@ -6,7 +6,7 @@ import App from './pages/index';
 import * as serviceWorker from './serviceWorker';
 import TagManager from 'react-gtm-module';
 import Eruda from 'eruda';
-import UAParser from 'ua-parser-js';
+import {UAParser} from 'ua-parser-js';
 import {isElectron} from './utils/platform';
 import { EduManager } from './sdk/education/manager';
 
