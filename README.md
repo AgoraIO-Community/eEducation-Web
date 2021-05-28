@@ -1,3 +1,5 @@
+# This repository has been deprecated and archived. for potential upgrade or advice please seek help from our sales team. thanks.
+
 > *其他语言版本：[简体中文](README.zh.md)*
 
 ## Overview
